@@ -8,7 +8,9 @@ public class User {
 	private String password;
 	
 	
-	
+	public void logIn() {
+		//do action
+	}
 	
 	
 	
