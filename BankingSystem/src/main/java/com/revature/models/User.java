@@ -1,22 +1,43 @@
 package com.revature.models;
 
-public class User {
-	
+import java.util.Scanner;
+
+public abstract class User {
+
 	
 	//Variables
 	private String username;
 	private String password;
 	
 	
-	public void logIn() {
-		//do action
+	//Constructors
+	public User(String username, String password) { 
+		// No default constructor to say that an account cannot be made without a user and pass
+		super();
+		this.username = username;
+		this.password = password;
 	}
 	
 	
 	
+	//Methods
+	public void logIn() {
+		Scanner scanner = new Scanner(System.in);
+		
+		
+		System.out.println("Enter Username");
+		String user = scanner.nextLine();
+		
+		System.out.println("Enter Password");
+		String pass = scanner.nextLine();
+		
+		//Error check inputs, such as Password must be more than 7 characters
+		
+		//If the user and pass match, then allow the login and fwd them to either customer or employer view
+		
+	}
 	
-	
-	
+
 	//Getters and Setters
 	public String getUsername() {
 		return username;
