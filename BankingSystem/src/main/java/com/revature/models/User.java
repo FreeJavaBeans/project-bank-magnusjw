@@ -2,6 +2,9 @@ package com.revature.models;
 
 import java.util.Scanner;
 
+import com.revature.menus.Account;
+
+
 public abstract class User {
 
 	
@@ -16,6 +19,9 @@ public abstract class User {
 		super();
 		this.username = username;
 		this.password = password;
+		
+		String stub = username + "Account";
+		Account Acc = new Account(username, 0.00); //Upon logging in, create fresh account for user
 	}
 	
 	

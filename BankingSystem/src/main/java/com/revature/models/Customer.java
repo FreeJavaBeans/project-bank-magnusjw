@@ -12,7 +12,7 @@ public class Customer extends User{
 	
 	
 	//Constructors
-	public Customer(String username, String password) {
+	public Customer(String username, String password, double balance, Account acc) {
 		super(username, password);
 		// TODO Auto-generated constructor stub
 	}
