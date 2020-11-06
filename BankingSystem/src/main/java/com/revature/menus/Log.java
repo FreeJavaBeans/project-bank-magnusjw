@@ -2,6 +2,8 @@ package com.revature.menus;
 
 import java.util.List;
 
+import com.revature.models.Transaction;
+
 //This class is meant to keep a log of all transactions for employers to view
 public class Log {
 	

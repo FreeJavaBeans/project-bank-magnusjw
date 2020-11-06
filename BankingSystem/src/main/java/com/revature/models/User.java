@@ -2,46 +2,55 @@ package com.revature.models;
 
 import java.util.Scanner;
 
-import com.revature.menus.Account;
+import com.revature.menus.Homepage;
 
 
-public abstract class User {
+public class User {
 
 	
 	//Variables
 	private String username;
 	private String password;
+	private Homepage home;
+	private Scanner input = new Scanner(System.in);
 	
 	
-	//Constructors
-	public User(String username, String password) { 
-		// No default constructor to say that an account cannot be made without a user and pass
-		super();
-		this.username = username;
-		this.password = password;
+	public void display() {
+
+
+		return sb.toString();
 		
-		String stub = username + "Account";
-		Account Acc = new Account(username, 0.00); //Upon logging in, create fresh account for user
 	}
-	
-	
 	
 	//Methods
-	public void logIn() {
-		Scanner scanner = new Scanner(System.in);
-		
-		
-		System.out.println("Enter Username");
-		String user = scanner.nextLine();
-		
-		System.out.println("Enter Password");
-		String pass = scanner.nextLine();
-		
-		//Error check inputs, such as Password must be more than 7 characters
-		
-		//If the user and pass match, then allow the login and fwd them to either customer or employer view
+	public void signUp() {
 		
 	}
+	
+	public void logIn() {
+		
+		System.out.println("Enter Username");
+		String user = input.next();
+		
+		if(user.length() < 4) {
+			System.out.println("Username must be atleast 4 characters");
+			System.out.println("Exiting...");
+			return;
+		}
+		
+		System.out.println("Enter Password");
+		String pass = input.next();
+		
+		if(pass.length() < 7) {
+			System.out.println("Password must be atleast 7 characters.");
+			System.out.println("Exiting...");
+			return;
+		}
+		
+		//Check db if user/pass exists in either customer or employee table
+		//If the user and pass match, then allow the login
+	}
+	
 	
 
 	//Getters and Setters
@@ -57,4 +66,34 @@ public abstract class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
+
+
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+	
+	
 }
