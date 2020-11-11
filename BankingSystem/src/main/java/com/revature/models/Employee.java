@@ -1,24 +1,19 @@
 package com.revature.models;
 
-public class Employee{
+public class Employee extends User{
 
-	//Variables
 	
-	//Constructors
+	private int employeeId;
+
 	public Employee() {
 		super();
 	}
 
-	//Methods
-	public void approveAcc() {
-		
+	public int getEmployeeId() {
+		return employeeId;
 	}
-	
-	public void rejectAcc() {
-		
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 
-	public void viewAcc(Customer customer) {
-		customer.viewBalance();
-	}
 }

@@ -1,37 +1,30 @@
 package com.revature;
 
-import com.revature.models.User;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.revature.menus.MenuSelector;
+import com.revature.util.ConnectionUtil;
 
 public class BankLauncher {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException{
 		
-		User currUser = new User();
-		while(true) {
-			currUser.display();
+		ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
+		Connection conn = cu.getConnection();
+		
+		if(conn != null && !conn.isClosed()) {
+			System.out.println("Connected to Database");
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
-		Customer Bill = new Customer(700);
-		Bill.createAccount(500);
-		
-		System.out.println("Money in account: " + Bill.viewBalance() + ", Money in Bill's pocket: " + Bill.getMoney());
-		
-		Bill.deposit(100);
-		
-		System.out.println("Money in account: " + Bill.viewBalance() + ", Money in Bill's pocket: " + Bill.getMoney());
-		
-		Bill.withdraw(500);
-		
-		System.out.println("Money in account: " + Bill.viewBalance() + ", Money in Bill's pocket: " + Bill.getMoney());
-		*/
-	
+
+		MenuSelector ms = MenuSelector.getMenuSelector();
+
+		while(true) {
+			System.out.println(ms.display());
+			ms.handleInput();
+			if(MenuSelector.getMenuSelector().isExit() == true) {
+				return;
+			}
+		}
 	}
 }

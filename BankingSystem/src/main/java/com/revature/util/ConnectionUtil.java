@@ -16,6 +16,8 @@ public class ConnectionUtil {
 	
 	private Connection conn;
 	
+	//jdbc:postgresql:localhost:5432/postgres
+	
 	//private constructor so no one else can call
 	private ConnectionUtil() {
 		super();
@@ -35,6 +37,7 @@ public class ConnectionUtil {
 			System.out.println("Password: " + password);
 			System.out.println("username: " + username);
 			System.out.println("url: " + url);
+			e.printStackTrace();
 		}
 		
 	}

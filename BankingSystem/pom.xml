@@ -5,4 +5,16 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Johnny Bank</name>
   <description>My Banking Projectile</description>
+  
+  
+  <!-- Dependencies added from JDBCDemos/pom.xml -->
+  	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.18</version>
+		</dependency>
+	</dependencies>
+  
 </project>
