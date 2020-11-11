@@ -6,13 +6,12 @@ import java.util.List;
 import com.revature.exceptions.CredentialException;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Customer;
-import com.revature.models.User;
-import com.revature.services.BankUserInterface;
-import com.revature.services.BankUserService;
+import com.revature.services.BankIntroInterface;
+import com.revature.services.BankIntroService;
 
 public class IntroMenu extends AbstractMenu{
 	
-	private BankUserInterface bui = new BankUserService();
+	private BankIntroInterface bii = new BankIntroService();
 	
 	@Override
 	public void handleInput() {
@@ -45,19 +44,16 @@ public class IntroMenu extends AbstractMenu{
 			
 			try {
 				
-				MenuSelector.getMenuSelector().setCurrentUser(bui.login(username, password));
+				MenuSelector.getMenuSelector().setCurrentUser(bii.login(username, password));
 				if(MenuSelector.getMenuSelector().getCurrentUser() instanceof Customer) {
-					System.out.println("debug: Customer login");
 					MenuSelector.getMenuSelector().traverse(0); //Customer
 				} else {
-					System.out.println("debug: Employee login");
 					MenuSelector.getMenuSelector().traverse(1); //Employee
 				}
 			} catch (UserNotFoundException e) {
 				System.out.println("Your Username or Password was Incorrect. Please Try Again");
 			} catch (CredentialException e) {
 				System.out.println("Username and password must be 5-20 Characters");
-				//MenuSelector.getMenuSelector().reset();
 			}
 		});
 		
@@ -83,7 +79,7 @@ public class IntroMenu extends AbstractMenu{
 			lastName = this.getInputReader().nextLine();
 	
 			try {
-				MenuSelector.getMenuSelector().setCurrentUser(bui.signup(username, password, confirm, firstName, lastName));
+				MenuSelector.getMenuSelector().setCurrentUser(bii.signup(username, password, confirm, firstName, lastName));
 				MenuSelector.getMenuSelector().traverse(0);
 			} catch (UserNotFoundException e) {
 				System.out.println("Username or Password was Incorrect. Please Try Again");

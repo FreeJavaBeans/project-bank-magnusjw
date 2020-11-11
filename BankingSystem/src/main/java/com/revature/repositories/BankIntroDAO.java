@@ -12,7 +12,7 @@ import com.revature.models.Employee;
 import com.revature.models.User;
 import com.revature.util.ConnectionUtil;
 
-public class BankUserDAO implements BankUserRepository{
+public class BankIntroDAO implements BankIntroRepository{
 	
 	private ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
 
@@ -37,7 +37,6 @@ public class BankUserDAO implements BankUserRepository{
 			ResultSet res = ps.executeQuery();
 			
 			if(username.substring(0, 3).equals("EMP")) { // Its an employee
-				System.out.println("debug: ding");
 				if(res.next()) {
 					Employee E = new Employee();
 					E.setEmployeeId(res.getInt("EmployeeId"));
@@ -84,18 +83,10 @@ public class BankUserDAO implements BankUserRepository{
 
 		}catch(SQLException e) {
 			e.printStackTrace();
-			System.out.println("debug: DAO");
 		}
 		
 		Customer c = new Customer(username, password, firstName, lastName);
 		return c;
 
 	}
-
-	@Override
-	public Customer findUserByUserId(int userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

@@ -4,18 +4,24 @@ public class Account {
 
 	private int accountId;
 	private int customerId;
+	//private String title;
 	private double balance;
-	private boolean approval;
+	private String status;
+
+	@Override
+	public String toString() {
+		return "Account: " + accountId + " --- " + "Balance: " + balance + " --- " + status;
+	}
 
 	public Account() {
 		super();
 	}
 	
-	public Account(Customer customer, double balance) {
+	public Account(int customerId, double balance) {
 		super();
-		this.customerId = customer.getCustomerId();
+		this.customerId = customerId;
 		this.balance = balance;
-		this.approval = false;
+		this.status = "PENDING";
 	}
 	
 	public int getAccountId() {
@@ -36,10 +42,10 @@ public class Account {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	public boolean isApproval() {
-		return approval;
+	public String getStatus() {
+		return status;
 	}
-	public void setApproval(boolean approval) {
-		this.approval = approval;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

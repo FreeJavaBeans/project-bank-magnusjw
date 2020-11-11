@@ -4,12 +4,12 @@ import com.revature.exceptions.CredentialException;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Customer;
 import com.revature.models.User;
-import com.revature.repositories.BankUserDAO;
-import com.revature.repositories.BankUserRepository;
+import com.revature.repositories.BankIntroDAO;
+import com.revature.repositories.BankIntroRepository;
 
-public class BankUserService implements BankUserInterface{
+public class BankIntroService implements BankIntroInterface{
 	
-	private BankUserRepository bad = new BankUserDAO();
+	private BankIntroRepository bad = new BankIntroDAO();
 
 	@Override
 	public User login(String username, String password) throws UserNotFoundException, CredentialException {
@@ -35,15 +35,8 @@ public class BankUserService implements BankUserInterface{
 			throw new CredentialException();
 		}
 		
-		System.out.println("debug: signup end");
 		Customer customer = bad.insertCustomer(username, password, firstName, lastName);
 
 		return customer;
 		}
-
-	@Override
-	public User findUserByUserId(int userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

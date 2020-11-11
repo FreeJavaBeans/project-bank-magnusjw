@@ -2,18 +2,15 @@ package com.revature.models;
 
 public class Employee extends User{
 
-	
-	private int employeeId;
-
 	public Employee() {
 		super();
 	}
 
 	public int getEmployeeId() {
-		return employeeId;
+		return userId;
 	}
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeeId(int userId) {
+		this.userId = userId;
 	}
 
 }

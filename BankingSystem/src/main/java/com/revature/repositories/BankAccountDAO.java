@@ -1,6 +1,5 @@
 package com.revature.repositories;
 
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.Connection;
@@ -9,69 +8,86 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.revature.models.Account;
-import com.revature.models.Customer;
 import com.revature.util.ConnectionUtil;
 
 public class BankAccountDAO implements BankAccountRepository{
 	
 	private ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
-	
-	public Set<Customer> findAllCustomers() {
+
+	@Override
+	public Set<Account> findCustomerAccounts(int id){
 		
 		Connection conn = cu.getConnection();
 		
-		Set<Customer> allCustomers = new HashSet<Customer>();
+		Set<Account> accounts = new HashSet<Account>();
 		
 		try {
-			Statement statementObject = conn.createStatement();
 			
-			String query = "select * from \"Customer\"";
+			PreparedStatement ps = conn.prepareStatement("select * from \"Account\" where \"CustomerId\" in "
+					+ "(select \"CustomerId\" from \"Customer\" where \"CustomerId\" = ?);");
 			
-			ResultSet results = statementObject.executeQuery(query);
 			
-			while(results.next()) {
-				Customer c = new Customer();
-				c.setUsername(results.getString("Username"));
-				c.setPassword(results.getString("Password"));
-				c.setFirstName(results.getString("FirstName"));
-				c.setLastName(results.getString("LastName"));
-				allCustomers.add(c);
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()) {
+				Account acc = new Account();
+				acc.setAccountId(rs.getInt("AccountId"));
+				acc.setCustomerId(rs.getInt("CustomerId"));
+				acc.setBalance(rs.getDouble("Balance"));
+				acc.setStatus(rs.getString("Status"));
+				
+				accounts.add(acc);
 			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return accounts;
+	}
+
+	@Override
+	public void insertAccount(int id, double balance) {
+		
+		Connection conn = cu.getConnection();
+		
+		String sql = "INSERT INTO \"Account\" (\"CustomerId\", \"Balance\") VALUES (?,?);";
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1, id);
+			ps.setDouble(2, balance);
+			
+			ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Get all Customers Failed");
+		}
+	}
+
+
+	@Override
+	public void changeAccountBalance(double amount) {
+		
+		Connection conn = cu.getConnection();
+		
+		String sql = "Update \"Account\" set \"balance\" = ? where \"AccountId\" = ?;";
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setDouble(1, amount);
+			ps.setInt(2, id);
+			
+			ps.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Get all Customers Failed");
 		}
 		
-		return allCustomers;
 	}
-
-	public Account findCustomerAccount(int id) {
-		
-		Connection conn = cu.getConnection();
-		
-		try {
-			
-			PreparedStatement ps = conn.prepareStatement("select * from \"Account\" where \"CustomerId\" is "
-					+ "(select \"CustomerId\" from \"Customer\" where \"Customerd\" = ?;");
-			
-			ps.setInt(1, id); // put int id into statement
-			
-			ResultSet rs = ps.executeQuery(); // execute Statement
-
-			if(rs.next()) { //Process result set to a food object
-				Account acc = new Account();
-				acc.setBalance(rs.getDouble("Balance"));
-				return acc;
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Find Customer Account Failed");
-		}
-		System.out.println("Find Customer Account Failed 2");
-		return null;
-	}
-
-
 }

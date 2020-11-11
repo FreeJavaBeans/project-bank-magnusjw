@@ -1,12 +1,21 @@
 package com.revature.models;
 
+import java.util.Set;
+
 public abstract class User {
 	
+	protected int userId;
 	protected String username;
 	protected String password;
 	protected String firstName;
 	protected String lastName;
 	
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -31,5 +40,4 @@ public abstract class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 }

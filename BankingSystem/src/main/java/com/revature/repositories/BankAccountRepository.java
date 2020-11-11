@@ -3,18 +3,13 @@ package com.revature.repositories;
 import java.util.Set;
 
 import com.revature.models.Account;
-import com.revature.models.Customer;
 
-//Behaviors our Account database should have
 public interface BankAccountRepository {
+
+	public Set<Account> findCustomerAccounts(int id); //503
 	
-	//Testing
-	public Set<Customer> findAllCustomers();
+	public void changeAccountBalance(double amount);
 	
-	//public Account applyForAccount();
-	
-	public Account findCustomerAccount(int id);
-	
-	//Should I have a repo for Transactions too?
+	public void insertAccount(int id, double balance);
 
 }

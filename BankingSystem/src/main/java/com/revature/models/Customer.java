@@ -5,10 +5,6 @@ import java.util.Set;
 public class Customer extends User{
 	
 
-	private int customerId;
-	
-	private Set<Account> Accounts; // set or just flat number?
-
 	public Customer() {
 		super();
 	}
@@ -22,15 +18,14 @@ public class Customer extends User{
 	
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", username=" + username + ", password=" + password
+		return "Customer [customerId=" + userId + ", username=" + username + ", password=" + password
 				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 	
 	public int getCustomerId() {
-		return customerId;
+		return userId;
 	}
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	public void setCustomerId(int userId) {
+		this.userId = userId;
 	}
-
 }
