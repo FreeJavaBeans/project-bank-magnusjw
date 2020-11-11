@@ -30,7 +30,6 @@ public class BankAccountService implements BankAccountInterface{
 		}
 	}
 	
-	
 	@Override
 	public void createAccount(Double balance) throws CredentialException{
 		
@@ -44,15 +43,31 @@ public class BankAccountService implements BankAccountInterface{
 		System.out.println("Account has been successfully made!");
 	}
 	
-	
 	@Override
-	public Account withdraw(Account account, Double amount) {
-		return null;
+	public void withdraw(int accountId, Double amount) throws CredentialException{
+
+		if(amount < 0) {
+			throw new CredentialException("Can't withdraw a negative amount");
+		} else if(amount == 0) {
+			throw new CredentialException("Can't withdraw zero dollars");
+		}
+		
+		double result = bar.withdrawBalance(accountId, amount);
+		System.out.println("Successful Withdraw!");
+		System.out.println("Final balance of account " + accountId + " is $" + result);
 	}
 	
-	
 	@Override
-	public Account deposit(Account account, Double amount) {
-		return null;
+	public void deposit(int accountId, Double amount) throws CredentialException{
+		
+		if(amount < 0) {
+			throw new CredentialException("Can't deposit a negative amount");
+		} else if(amount == 0) {
+			throw new CredentialException("Can't deposit zero dollars");
+		}
+		
+		double result = bar.depositBalance(accountId, amount);
+		System.out.println("Successful Deposit!");
+		System.out.println("Final balance of account " + accountId + " is $" + result);
 	}
 }

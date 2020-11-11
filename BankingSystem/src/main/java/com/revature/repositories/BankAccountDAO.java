@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.revature.exceptions.CredentialException;
 import com.revature.models.Account;
 import com.revature.util.ConnectionUtil;
 
@@ -24,7 +25,7 @@ public class BankAccountDAO implements BankAccountRepository{
 		try {
 			
 			PreparedStatement ps = conn.prepareStatement("select * from \"Account\" where \"CustomerId\" in "
-					+ "(select \"CustomerId\" from \"Customer\" where \"CustomerId\" = ?);");
+					+ "(select \"CustomerId\" from \"Customer\" where \"CustomerId\" = ?) order by \"AccountId\";");
 			
 			
 			ps.setInt(1, id);
@@ -68,26 +69,77 @@ public class BankAccountDAO implements BankAccountRepository{
 		}
 	}
 
-
 	@Override
-	public void changeAccountBalance(double amount) {
+	public double withdrawBalance(int accountId, double amount) throws CredentialException{
 		
 		Connection conn = cu.getConnection();
 		
-		String sql = "Update \"Account\" set \"balance\" = ? where \"AccountId\" = ?;";
+		String sql = "select \"Balance\" from \"Account\" where \"AccountId\" = ?;";
+		String sql2 = "Update \"Account\" set \"Balance\" = ? where \"AccountId\" = ?;";
 		
 		try {
+			
 			PreparedStatement ps = conn.prepareStatement(sql);
 			
-			ps.setDouble(1, amount);
-			ps.setInt(2, id);
+			ps.setInt(1,  accountId);
 			
-			ps.executeUpdate();
+			ResultSet rs = ps.executeQuery();
+		
+			if(rs.next()) {
+				double balance = (rs.getDouble("Balance"));
+				if(balance < amount) {
+					throw new CredentialException("Account does not have enough money to withdraw");
+				}
+				amount -= balance;
+			}
 			
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			
+			ps2.setDouble(1, amount);
+			ps2.setInt(2, accountId);
+			
+			ps2.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Get all Customers Failed");
 		}
 		
+		return amount;
+		
+	}
+
+	@Override
+	public double depositBalance(int accountId, double amount){
+		Connection conn = cu.getConnection();
+		
+		String sql = "select \"Balance\" from \"Account\" where \"AccountId\" = ?;";
+		String sql2 = "Update \"Account\" set \"Balance\" = ? where \"AccountId\" = ?;";
+		
+		try {
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setInt(1,  accountId);
+			
+			ResultSet rs = ps.executeQuery();
+
+			if(rs.next()) {
+				double balance = (rs.getDouble("Balance"));
+				amount += balance;
+			}
+			
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			
+			ps2.setDouble(1, amount);
+			ps2.setInt(2, accountId);
+			
+			ps2.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Get all Customers Failed");
+		}
+		return amount;
 	}
 }

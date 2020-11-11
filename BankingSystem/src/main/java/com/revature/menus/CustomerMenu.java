@@ -49,31 +49,47 @@ public class CustomerMenu extends AbstractMenu{
 			}
 		});
 		MenuLine l3 = new MenuLine(2, ()->"3: Withdraw from an Account", ()->{
+			int accountId;
 			double balance;
-			System.out.println("Please enter Amount you wish to withdraw: ");
+			System.out.println("Which account number would you like to withdraw from: ");
+			accountId = this.getInputReader().nextInt();
+			System.out.println("How much would you like to withdraw: ");
 			balance = this.getInputReader().nextDouble();
 			
 			try {
-				bai.withdraw(account, amount); //
+				bai.withdraw(accountId, balance); //
 			} catch (CredentialException e) {
 				System.out.println("Balance can't go below 0");
 			}
 		});
 		MenuLine l4 = new MenuLine(3, ()->"4: Deposit into an Account", ()->{
+			int accountId;
 			double balance;
-			System.out.println("Please enter amount you wish to deposit ");
+			System.out.println("Which account number would you like to deposit to: ");
+			accountId = this.getInputReader().nextInt();
+			System.out.println("How much would you like to deposit: ");
 			balance = this.getInputReader().nextDouble();
 			
 			try {
-				bai.deposit(account, amount)//
+				bai.deposit(accountId, balance);//
 			} catch (CredentialException e) {
 				System.out.println("Cant deposit negative amount");
 			}
 		});
+		
+		
 		MenuLine l5 = new MenuLine(4, ()->"5: Transfer Money to Another Account", ()->{
-			System.out.println("503 Not Implemented");
+			int accountId;
+			double balance;
+			System.out.println("Which account number would you like to Transfer to: ");
+			accountId = this.getInputReader().nextInt();
+			System.out.println("How much would you like to Transfer: ");
+			balance = this.getInputReader().nextDouble();
+			
+			
+			
 		});
-		MenuLine l6 = new MenuLine(5, ()->"6: Accept Money Transfer from Another Account", ()->{
+		MenuLine l6 = new MenuLine(5, ()->"6: View Pending Transfers to your Accounts", ()->{
 			System.out.println("503 Not Implemented");
 		});
 		MenuLine l7 = new MenuLine(6, ()->"7: Exit Program", ()->{

@@ -4,13 +4,13 @@ public class Account {
 
 	private int accountId;
 	private int customerId;
-	//private String title;
+	//private String title; If I have time
 	private double balance;
 	private String status;
 
 	@Override
 	public String toString() {
-		return "Account: " + accountId + " --- " + "Balance: " + balance + " --- " + status;
+		return "Account: " + accountId + " --- " + "Balance: $" + balance + " --- " + status;
 	}
 
 	public Account() {
