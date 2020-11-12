@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.revature.exceptions.CredentialException;
 import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Customer;
 import com.revature.models.Employee;
@@ -17,53 +16,63 @@ public class BankIntroDAO implements BankIntroRepository{
 	private ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
 
 	@Override
-	public User findUserByUsernameAndPassword(String username, String password) throws UserNotFoundException, CredentialException{
+	public User findUserByUsernameAndPassword(String username, String password){
 		Connection conn = cu.getConnection();
+		
+		Employee emp = new Employee();
+		Customer c = new Customer();
+
+		boolean employee = false;
+		
+		if(username.substring(0, 3).equals("EMP")){
+			employee = true;
+		}
+		
 		try {
 			
 			String sql;
 			
-			if(username.substring(0, 3).equals("EMP")) {
+			if(employee) {
 				sql = "Select * from \"Employee\" where \"Username\" = ? and \"Password\" = ?;";
 			} else {
 				sql = "Select * from \"Customer\" where \"Username\" = ? and \"Password\" = ?;";
 			}
 			
 			PreparedStatement ps = conn.prepareStatement(sql);
-
 			ps.setString(1, username);
 			ps.setString(2, password);
-
 			ResultSet res = ps.executeQuery();
 			
-			if(username.substring(0, 3).equals("EMP")) { // Its an employee
+			if(employee) {
 				if(res.next()) {
-					Employee E = new Employee();
-					E.setEmployeeId(res.getInt("EmployeeId"));
-					E.setFirstName(res.getString("FirstName"));
-					E.setUsername(res.getString("Username"));
-					return E;
+					emp.setEmployeeId(res.getInt("EmployeeId"));
+					emp.setFirstName(res.getString("FirstName"));
+					emp.setUsername(res.getString("Username"));
 				}else {
 					throw new UserNotFoundException();
 				}
 			} else {
 				if(res.next()) {
-					Customer c = new Customer();
+
 					c.setCustomerId(res.getInt("CustomerId"));
 					c.setFirstName(res.getString("FirstName"));
 					c.setUsername(res.getString("Username"));
-					return c;
 				}else {
 					throw new UserNotFoundException();
 				}
 			}
+		} catch(UserNotFoundException e) {
+			System.out.println("User Not Found");
 		}catch(SQLException e) {
-			e.printStackTrace();
-			throw new CredentialException();
+			System.out.println("Find Customer SQL Error");
+		}
+		if(employee) {
+			return emp;
+		} else {
+			return c;
 		}
 	}
 
-	
 	@Override
 	public Customer insertCustomer(String username, String password, String firstName, String lastName){
 		Connection conn = cu.getConnection();
@@ -82,7 +91,7 @@ public class BankIntroDAO implements BankIntroRepository{
 			ps.executeUpdate();
 
 		}catch(SQLException e) {
-			e.printStackTrace();
+			System.out.println("Create Customer SQL Error");
 		}
 		
 		Customer c = new Customer(username, password, firstName, lastName);

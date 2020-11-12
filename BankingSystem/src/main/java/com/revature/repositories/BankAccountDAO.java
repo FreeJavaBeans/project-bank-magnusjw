@@ -48,7 +48,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Find Customer Accounts SQL Error");
 		}
 		return accounts;
 	}
@@ -68,9 +68,10 @@ public class BankAccountDAO implements BankAccountRepository{
 			
 			ps.executeUpdate();
 			
+			System.out.println("Successfully Applied for Account!");
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Get all Customers Failed");
+			System.out.println("Create Account SQL Error");
 		}
 	}
 
@@ -118,8 +119,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Get all Customers Failed");
+			System.out.println("Withdraw SQL Error");
 		}
 		return balance;
 	}
@@ -160,8 +160,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			psLog.executeUpdate();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Get all Customers Failed");
+			System.out.println("Deposit SQL Error");
 		}
 		return amount;
 	}
@@ -191,11 +190,9 @@ public class BankAccountDAO implements BankAccountRepository{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("View Transactions SQL Error");
 		}
-		
 		return transactions;
-		
 	}
 
 	@Override
@@ -223,7 +220,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("View Pending Accounts SQL Error");
 		}
 		return accounts;
 		
@@ -239,14 +236,33 @@ public class BankAccountDAO implements BankAccountRepository{
 		
 		try {
 			
+			String sqlAcc = "select \"Status\" from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
+			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming account
+			ps2.setInt(1, accountId);
+			ResultSet rs2 = ps2.executeQuery();
+			
+			if(rs2.next()) {
+				Account acc = new Account();
+				acc.setStatus(rs2.getString("Status"));
+				if(acc.getStatus().equals("Approved")) {
+					throw new AccountNotApproved();
+				}
+			} else {
+				throw new AccountNotFound();
+			}
+			
 			PreparedStatement ps = conn.prepareStatement(sql);
-			
 			ps.setInt(1, accountId);
-			
 			ps.executeUpdate();
 			
+			System.out.println("Account Approved Successfully");
+			
+		} catch (AccountNotFound e) {
+			System.out.println("Account not Found");
+		} catch (AccountNotApproved e) {
+			System.out.println("Account is already Approved");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Approve Account SQL Error");
 		}
 	}
 
@@ -255,20 +271,38 @@ public class BankAccountDAO implements BankAccountRepository{
 	public void rejectAccount(int accountId){
 		Connection conn = cu.getConnection();
 		
-		String sql = "Update \"Account\" set \"Status\" = 'REJECTED' where \"AccountId\" = ? and \"Status\" = 'PENDING';";
+		String sql = "Update \"Account\" set \"Status\" = 'REJECTED' where \"AccountId\" = ?;";
 		
 		try {
 			
+			String sqlAcc = "select \"Status\" from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
+			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming account
+			ps2.setInt(1, accountId);
+			ResultSet rs2 = ps2.executeQuery();
+			
+			if(rs2.next()) {
+				Account acc = new Account();
+				acc.setStatus(rs2.getString("Status"));
+				if(acc.getStatus().equals("REJECTED")) {
+					throw new AccountNotApproved();
+				}
+			} else {
+				throw new AccountNotFound();
+			}
+			
 			PreparedStatement ps = conn.prepareStatement(sql);
-			
 			ps.setInt(1, accountId);
-			
 			ps.executeUpdate();
 			
+			System.out.println("Account Rejected Successfully");
+			
+		} catch (AccountNotFound e) {
+			System.out.println("Account not Found");
+		} catch (AccountNotApproved e) {
+			System.out.println("Account is already Rejected");
 		} catch (SQLException e) {
-			System.out.println("SQL Error Reject Account");
+			System.out.println("Reject Account SQL Error");
 		}
-		
 	}
 
 	
@@ -280,7 +314,7 @@ public class BankAccountDAO implements BankAccountRepository{
 		
 		Set<Transaction> transactions = new HashSet<Transaction>();
 		
-		String sql = "select * from \"Transaction\" where \"Status\" = 'PENDING' and \"RecipientId\" in (select \"AccountId\" from \"Account\" where \"CustomerId\" = ?);";
+		String sql = "select * from \"Transaction\" where \"Status\" = 'PENDING' and \"RecipientId\" in (select \"AccountId\" from \"Account\" where \"CustomerId\" = ?) order by \"TransactionId\";";
 
 		try {
 		
@@ -302,7 +336,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			}
 			
 		}catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("View Pending Transactions SQL Error");
 		}
 		return transactions;
 		
@@ -319,9 +353,9 @@ public class BankAccountDAO implements BankAccountRepository{
 		Account senAcc = new Account();
 		
 		try {
-			
-			PreparedStatement s = conn.prepareStatement(sqlTr);
-			ResultSet rs = s.executeQuery();
+			PreparedStatement ps = conn.prepareStatement(sqlTr);
+			ps.setInt(1, transactionId);
+			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) { //This is the Transaction in Question
 				tr.setTransactionId(rs.getInt("TransactionId"));
@@ -341,7 +375,7 @@ public class BankAccountDAO implements BankAccountRepository{
 			String sqlAcc = "select * from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
 			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming recipient account
 			ps2.setInt(1, tr.getRecipientId());
-			ResultSet rs2 = ps2.executeQuery(sqlAcc);
+			ResultSet rs2 = ps2.executeQuery();
 			
 			if(rs2.next()) {
 				recAcc.setAccountId(rs2.getInt("AccountId"));
@@ -351,14 +385,13 @@ public class BankAccountDAO implements BankAccountRepository{
 				if(recAcc.getStatus().equals("Approved")) {
 					throw new AccountNotApproved();
 				}
-				System.out.println("Recipient Account found!");
 			} else {
 				throw new AccountNotFound();
 			}
 			
 			PreparedStatement ps3 = conn.prepareStatement(sqlAcc); //Confirming sender account
 			ps3.setInt(1, tr.getSenderId());
-			ResultSet rs3 = ps3.executeQuery(sqlAcc);
+			ResultSet rs3 = ps3.executeQuery();
 			
 			if(rs3.next()) {
 				senAcc.setAccountId(rs3.getInt("AccountId"));
@@ -368,7 +401,6 @@ public class BankAccountDAO implements BankAccountRepository{
 				if(senAcc.getStatus().equals("Approved")) {
 					throw new AccountNotApproved();
 				}
-				System.out.println("Recipient Account found!");
 			} else {
 				throw new AccountNotFound();
 			}
@@ -412,8 +444,9 @@ public class BankAccountDAO implements BankAccountRepository{
 		
 		try {
 			
-			PreparedStatement s = conn.prepareStatement(sqlTr);
-			ResultSet rs = s.executeQuery();
+			PreparedStatement ps = conn.prepareStatement(sqlTr);
+			ps.setInt(1, transactionId);
+			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) { //This is the Transaction in Question
 				tr.setTransactionId(rs.getInt("TransactionId"));
@@ -432,19 +465,18 @@ public class BankAccountDAO implements BankAccountRepository{
 			
 			String sqlAcc = "select * from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
 
-			PreparedStatement ps3 = conn.prepareStatement(sqlAcc); //Confirming sender account
-			ps3.setInt(1, tr.getSenderId());
-			ResultSet rs3 = ps3.executeQuery(sqlAcc);
+			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming sender account
+			ps2.setInt(1, tr.getSenderId());
+			ResultSet rs2 = ps2.executeQuery();
 			
-			if(rs3.next()) {
-				senAcc.setAccountId(rs3.getInt("AccountId"));
-				senAcc.setBalance(rs3.getDouble("Balance"));
-				senAcc.setCustomerId(rs3.getInt("CustomerId"));
-				senAcc.setStatus(rs3.getString("Status"));
+			if(rs2.next()) {
+				senAcc.setAccountId(rs2.getInt("AccountId"));
+				senAcc.setBalance(rs2.getDouble("Balance"));
+				senAcc.setCustomerId(rs2.getInt("CustomerId"));
+				senAcc.setStatus(rs2.getString("Status"));
 				if(senAcc.getStatus().equals("Approved")) {
 					throw new AccountNotApproved();
 				}
-				System.out.println("Recipient Account found!");
 			} else {
 				throw new AccountNotFound();
 			}
@@ -454,10 +486,10 @@ public class BankAccountDAO implements BankAccountRepository{
 			sTr.executeUpdate(sqlUpdate);
 			
 			String sqlUpdateAcc = "Update \"Account\" set \"Balance\" = ? where \"AccountId\" = ?;"; // Return funds to Sender account
-			PreparedStatement ps4 = conn.prepareStatement(sqlUpdateAcc);
-			ps4.setDouble(1, (senAcc.getBalance() + tr.getAmount()));
-			ps4.setInt(2, senAcc.getAccountId());
-			ps4.executeUpdate();
+			PreparedStatement ps3 = conn.prepareStatement(sqlUpdateAcc);
+			ps3.setDouble(1, (senAcc.getBalance() + tr.getAmount()));
+			ps3.setInt(2, senAcc.getAccountId());
+			ps3.executeUpdate();
 			
 			System.out.println("Transaction has been Rejected");
 			
@@ -480,42 +512,42 @@ public class BankAccountDAO implements BankAccountRepository{
 		Account recAcc = new Account();
 		Account senAcc = new Account();
 		
+		String sqlAcc = "select * from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
+		
 		try {
 			
-			String sqlAcc = "select * from \"Account\" where \"AccountId\" = ?;"; //Account selection sql
-			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming recipient account
-			ps2.setInt(1, accountId);
-			ResultSet rs2 = ps2.executeQuery(sqlAcc);
+			PreparedStatement ps = conn.prepareStatement(sqlAcc); //Confirming recipient account
+			ps.setInt(1, accountId);
+			ResultSet rs = ps.executeQuery();
 			
-			if(rs2.next()) {
-				recAcc.setAccountId(rs2.getInt("AccountId"));
-				recAcc.setBalance(rs2.getDouble("Balance"));
-				recAcc.setCustomerId(rs2.getInt("CustomerId"));
-				recAcc.setStatus(rs2.getString("Status"));
+			if(rs.next()) {
+				recAcc.setAccountId(rs.getInt("AccountId"));
+				recAcc.setBalance(rs.getDouble("Balance"));
+				recAcc.setCustomerId(rs.getInt("CustomerId"));
+				recAcc.setStatus(rs.getString("Status"));
+				
 				if(recAcc.getStatus().equals("Approved")) {
 					throw new AccountNotApproved();
 				}
-				System.out.println("Recipient Account found!");
 			} else {
 				throw new AccountNotFound();
 			}
 			
-			PreparedStatement ps3 = conn.prepareStatement(sqlAcc); //Confirming sender account
-			ps3.setInt(1, myAccountId);
-			ResultSet rs3 = ps3.executeQuery(sqlAcc);
+			PreparedStatement ps2 = conn.prepareStatement(sqlAcc); //Confirming sender account
+			ps2.setInt(1, myAccountId);
+			ResultSet rs2 = ps2.executeQuery();
 			
-			if(rs3.next()) {
-				senAcc.setAccountId(rs3.getInt("AccountId"));
-				senAcc.setBalance(rs3.getDouble("Balance"));
+			if(rs2.next()) {
+				senAcc.setAccountId(rs2.getInt("AccountId"));
+				senAcc.setBalance(rs2.getDouble("Balance"));
 				if(senAcc.getBalance() < amount) {
 					throw new CredentialException();
 				}
-				senAcc.setCustomerId(rs3.getInt("CustomerId"));
-				senAcc.setStatus(rs3.getString("Status"));
+				senAcc.setCustomerId(rs2.getInt("CustomerId"));
+				senAcc.setStatus(rs2.getString("Status"));
 				if(senAcc.getStatus().equals("Approved")) {
 					throw new AccountNotApproved();
 				}
-				System.out.println("Recipient Account found!");
 			} else {
 				throw new AccountNotFound();
 			}
@@ -525,17 +557,21 @@ public class BankAccountDAO implements BankAccountRepository{
 			sTr.executeUpdate(sqlTr);
 			
 			String sqlUpdateAcc = "Update \"Account\" set \"Balance\" = ? where \"AccountId\" = ?;"; // Remove funds from sender account
+			
 			PreparedStatement ps4 = conn.prepareStatement(sqlUpdateAcc);
 			ps4.setDouble(1, (senAcc.getBalance() - amount));
 			ps4.setInt(2, senAcc.getAccountId());
 			ps4.executeUpdate();
+			
+			System.out.println("Transfer Created Successfully");
+			
 			
 		} catch (AccountNotFound e){
 			System.out.println("Account not Found");
 		} catch (AccountNotApproved e){
 			System.out.println("Account not Found");
 		} catch (SQLException e) {
-			System.out.println("Approve Transaction SQL Error");
+			System.out.println("Create Transfer SQL Error");
 		}
 	}
 }

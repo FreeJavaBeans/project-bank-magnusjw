@@ -3,7 +3,6 @@ package com.revature.menus;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.exceptions.AccountNotApproved;
 import com.revature.exceptions.CredentialException;
 import com.revature.services.BankAccountInterface;
 import com.revature.services.BankAccountService;

@@ -34,7 +34,6 @@ public class EmployeeMenu extends AbstractMenu{
 			try {
 				bai.viewPendingAccounts();
 			} catch (CredentialException e) {
-				e.printStackTrace();
 				System.out.println("No Pending Accounts");
 			}
 		});
@@ -70,7 +69,6 @@ public class EmployeeMenu extends AbstractMenu{
 			try {
 				bai.viewLogs();
 			} catch (CredentialException e) {
-				e.printStackTrace();
 				System.out.println("No Transactions in Log");
 			}
 		});

@@ -57,7 +57,7 @@ public class BankAccountService implements BankAccountInterface{
 		}
 		
 		bar.insertAccount(customerId, balance);
-		System.out.println("Successfully Applied for Account!");
+		
 	}
 	
 	@Override
@@ -129,13 +129,11 @@ public class BankAccountService implements BankAccountInterface{
 	@Override
 	public void approveAccount(int accountId){
 		bar.approveAccount(accountId);
-		System.out.println("Account has been Approved");
 	}
 
 	@Override
 	public void rejectAccount(int accountId){
 		bar.rejectAccount(accountId);
-		System.out.println("Account has been Rejected");
 	}
 
 	@Override
@@ -175,7 +173,7 @@ public class BankAccountService implements BankAccountInterface{
 		
 			bar.transfer(accountId, myAccountId, amount);
 		} catch(CredentialException e) {
-			System.out.println("Hi");
+			System.out.println("Requested negative amount or Account has insufficient funds");
 		}
 	}
 }

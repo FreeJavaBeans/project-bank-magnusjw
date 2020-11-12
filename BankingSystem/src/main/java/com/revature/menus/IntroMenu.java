@@ -3,8 +3,6 @@ package com.revature.menus;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.exceptions.CredentialException;
-import com.revature.exceptions.UserNotFoundException;
 import com.revature.models.Customer;
 import com.revature.services.BankIntroInterface;
 import com.revature.services.BankIntroService;
@@ -41,20 +39,14 @@ public class IntroMenu extends AbstractMenu{
 			
 			System.out.print("Please Enter your Password: ");
 			password = this.getInputReader().nextLine();
-			
-			try {
 				
-				MenuSelector.getMenuSelector().setCurrentUser(bii.login(username, password));
-				if(MenuSelector.getMenuSelector().getCurrentUser() instanceof Customer) {
-					MenuSelector.getMenuSelector().traverse(0); //Customer
-				} else {
-					MenuSelector.getMenuSelector().traverse(1); //Employee
-				}
-			} catch (UserNotFoundException e) {
-				System.out.println("Your Username or Password was Incorrect. Please Try Again");
-			} catch (CredentialException e) {
-				System.out.println("Username and password must be 5-20 Characters");
+			MenuSelector.getMenuSelector().setCurrentUser(bii.login(username, password));
+			if(MenuSelector.getMenuSelector().getCurrentUser() instanceof Customer) {
+				MenuSelector.getMenuSelector().traverse(0); //Customer
+			} else {
+				MenuSelector.getMenuSelector().traverse(1); //Employee
 			}
+	
 		});
 		
 		MenuLine l2 = new MenuLine(1, ()->"2: Signup", ()->{
@@ -78,12 +70,8 @@ public class IntroMenu extends AbstractMenu{
 			System.out.print("Please Enter your Last Name: ");
 			lastName = this.getInputReader().nextLine();
 	
-			try {
-				MenuSelector.getMenuSelector().setCurrentUser(bii.signup(username, password, confirm, firstName, lastName));
-				MenuSelector.getMenuSelector().traverse(0);
-			} catch (CredentialException e) {
-				System.out.println("Please Try Again");
-			}
+			MenuSelector.getMenuSelector().setCurrentUser(bii.signup(username, password, confirm, firstName, lastName));
+			MenuSelector.getMenuSelector().traverse(0);
 		});
 		
 		MenuLine l3 = new MenuLine(2, ()->"3: Exit Program", ()->{
