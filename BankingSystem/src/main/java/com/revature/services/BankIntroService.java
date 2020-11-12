@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.BankLauncher;
 import com.revature.exceptions.CredentialException;
 import com.revature.models.Customer;
 import com.revature.models.User;
@@ -25,6 +26,8 @@ public class BankIntroService implements BankIntroInterface{
 		} catch(CredentialException e) {
 		}
 		User user = bad.findUserByUsernameAndPassword(username, password);
+		
+		BankLauncher.Logger.info(user.getUsername() + " has logged in.");
 		
 		return user;
 
@@ -52,6 +55,8 @@ public class BankIntroService implements BankIntroInterface{
 		}
 		
 		Customer customer = bad.insertCustomer(username, password, firstName, lastName);
+		
+		BankLauncher.Logger.info(customer.getUsername() + " has signed up for an account.");
 
 		return customer;
 		}

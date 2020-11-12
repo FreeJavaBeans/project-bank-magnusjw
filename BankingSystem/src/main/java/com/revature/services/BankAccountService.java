@@ -3,6 +3,7 @@ package com.revature.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.revature.BankLauncher;
 import com.revature.exceptions.AccountNotApproved;
 import com.revature.exceptions.CredentialException;
 import com.revature.menus.MenuSelector;
@@ -30,6 +31,7 @@ public class BankAccountService implements BankAccountInterface{
 		for(Account acc : accounts) {
 			System.out.println(acc);
 		}
+		
 	}
 	
 	@Override
@@ -57,7 +59,8 @@ public class BankAccountService implements BankAccountInterface{
 		}
 		
 		bar.insertAccount(customerId, balance);
-		
+
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " created account with a balance of " + balance);
 	}
 	
 	@Override
@@ -75,7 +78,7 @@ public class BankAccountService implements BankAccountInterface{
 		} catch (AccountNotApproved e) {
 			System.out.println("Account is not approved");
 		}
-
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " withdrew " + amount + " from account " + accountId);
 	}
 	
 	@Override
@@ -94,6 +97,7 @@ public class BankAccountService implements BankAccountInterface{
 		} catch (AccountNotApproved e) {
 			System.out.println("Account is not approved");
 		}
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " deposited " + amount + " to account " + accountId);
 	}
 	
 	@Override
@@ -129,11 +133,15 @@ public class BankAccountService implements BankAccountInterface{
 	@Override
 	public void approveAccount(int accountId){
 		bar.approveAccount(accountId);
+		
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " approved account " + accountId);
 	}
 
 	@Override
 	public void rejectAccount(int accountId){
 		bar.rejectAccount(accountId);
+		
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " rejected account " + accountId);
 	}
 
 	@Override
@@ -154,13 +162,16 @@ public class BankAccountService implements BankAccountInterface{
 	@Override
 	public void approveTransfer(int TransactionId){
 		bar.approveTransaction(TransactionId);
+		
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " approved transfer " + TransactionId);
 	}
 
 	@Override
 	public void rejectTransfer(int TransactionId){
 		bar.rejectTransaction(TransactionId);
+		
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " rejected transfer " + TransactionId);
 	}
-
 	
 	@Override
 	public void transfer(int accountId, int myAccountId, double amount){
@@ -175,5 +186,7 @@ public class BankAccountService implements BankAccountInterface{
 		} catch(CredentialException e) {
 			System.out.println("Requested negative amount or Account has insufficient funds");
 		}
+		
+		BankLauncher.Logger.info(MenuSelector.getMenuSelector().getCurrentUser().getUsername() + " created a transfer of " + amount + " from account " + myAccountId + " to account " + accountId);
 	}
 }

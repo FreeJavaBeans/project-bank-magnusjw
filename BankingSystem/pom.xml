@@ -6,15 +6,56 @@
   <name>Johnny Bank</name>
   <description>My Banking Projectile</description>
   
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.7.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
   
-  <!-- Dependencies added from JDBCDemos/pom.xml -->
+  
+  <!-- Dependencies added from JDBCDemos/pom.xml
+  https://mvnrepository.com/artifact/org.postgresql/postgresql -->
   	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.18</version>
 		</dependency>
+				
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<version>1.7.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<version>1.7.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.2</version>
+		</dependency>
+
 	</dependencies>
-  
+	
+
+	
 </project>

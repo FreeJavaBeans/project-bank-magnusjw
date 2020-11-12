@@ -1,9 +1,6 @@
 package com.revature.models;
 
-import java.util.Set;
-
 public class Customer extends User{
-	
 
 	public Customer() {
 		super();

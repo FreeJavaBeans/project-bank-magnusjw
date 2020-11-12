@@ -225,9 +225,7 @@ public class BankAccountDAO implements BankAccountRepository{
 		return accounts;
 		
 	}
-	
 
-	
 	@Override
 	public void approveAccount(int accountId) {
 		Connection conn = cu.getConnection();
@@ -266,7 +264,6 @@ public class BankAccountDAO implements BankAccountRepository{
 		}
 	}
 
-	
 	@Override
 	public void rejectAccount(int accountId){
 		Connection conn = cu.getConnection();
@@ -305,7 +302,6 @@ public class BankAccountDAO implements BankAccountRepository{
 		}
 	}
 
-	
 	@Override
 	public Set<Transaction> viewPendingTransactions(){
 		Connection conn = cu.getConnection();
@@ -342,7 +338,6 @@ public class BankAccountDAO implements BankAccountRepository{
 		
 	}
 	
-
 	@Override
 	public void approveTransaction(int transactionId){
 		Connection conn = cu.getConnection();
@@ -433,7 +428,6 @@ public class BankAccountDAO implements BankAccountRepository{
 		}
 	}
 	
-
 	@Override
 	public void rejectTransaction(int transactionId){
 		Connection conn = cu.getConnection();
@@ -503,7 +497,6 @@ public class BankAccountDAO implements BankAccountRepository{
 			System.out.println("Approve Transaction SQL Error");
 		}
 	}
-
 	
 	@Override
 	public void transfer(int accountId, int myAccountId, double amount) throws CredentialException{
