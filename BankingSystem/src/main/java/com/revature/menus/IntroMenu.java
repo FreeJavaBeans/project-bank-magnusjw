@@ -69,22 +69,20 @@ public class IntroMenu extends AbstractMenu{
 			System.out.print("Please Enter your Password: ");
 			password = this.getInputReader().nextLine();
 
-			System.out.println("Please Confirm Password: ");
+			System.out.print("Please Confirm Password: ");
 			confirm = this.getInputReader().nextLine();
 			
-			System.out.println("Please Enter your First Name: ");
+			System.out.print("Please Enter your First Name: ");
 			firstName = this.getInputReader().nextLine();
 			
-			System.out.println("Please Enter your Last Name: ");
+			System.out.print("Please Enter your Last Name: ");
 			lastName = this.getInputReader().nextLine();
 	
 			try {
 				MenuSelector.getMenuSelector().setCurrentUser(bii.signup(username, password, confirm, firstName, lastName));
 				MenuSelector.getMenuSelector().traverse(0);
-			} catch (UserNotFoundException e) {
-				System.out.println("Username or Password was Incorrect. Please Try Again");
 			} catch (CredentialException e) {
-				System.out.println("Username and Password must be 5-20 Characters.");
+				System.out.println("Please Try Again");
 			}
 		});
 		

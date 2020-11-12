@@ -2,33 +2,35 @@ package com.revature.models;
 
 public class Transaction {
 
+	private int transactionId;
 	private int recipientId;
 	private int senderId;
 	private int type; // 0=deposit, 1=withdraw, 2=transfer
 	private double amount;
+	private String status;
 
 	public Transaction() {
 		super();
-	}
-	public Transaction(int recipientId, int senderId, int type, double amount) {
-		super();
-		this.senderId = senderId;
-		this.type = type;
-		this.amount = amount;
-		this.recipientId = recipientId;
 	}
 	
 	@Override
 	public String toString() {
 		if(type == 0) {
-			return "DEPOSIT: $" + amount + ", AccountId: " + recipientId + "]";
+			return "Id " + transactionId + ": DEPOSIT: $" + amount + ", AccountId: " + recipientId +", Status: " + status;
 		} else if (type == 1) {
-			return "WITHDRAW: $" + amount + ", AccountId: " + recipientId + "]";
+			return "Id " + transactionId + ": WITHDRAWEL: $" + amount + ", AccountId: " + recipientId +", Status: " + status;
 		} else {
-			return "TRANSFER: $" + amount + ", from " + senderId + ", recipientId=" + recipientId + "]";
+			return "Id " + transactionId + ": TRANSFER: $" + amount + ", from Account " + senderId + ", to Account " + recipientId +", Status: " + status;
 		}
 	}
 	
+	
+	public int getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
 	public int getRecipientId() {
 		return recipientId;
 	}
@@ -52,5 +54,11 @@ public class Transaction {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
